@@ -1,0 +1,20 @@
+{
+    "model_lib": "Llama-2-7b-chat-hf-q4f16_1",
+    "local_id": "Llama-2-7b-chat-hf-q4f16_1",
+    "conv_template": "llama-2",
+    "temperature": 0.7,
+    "repetition_penalty": 1.0,
+    "top_p": 0.95,
+    "mean_gen_len": 128,
+    "max_gen_len": 512,
+    "shift_fill_factor": 0.3,
+    "tokenizer_files": [
+        "added_tokens.json",
+        "tokenizer.json",
+        "tokenizer.model"
+    ],
+    "model_category": "llama",
+    "model_name": "Llama-2-7b-chat-hf",
+    "max_window_size": 4096,
+    "vocab_size": 32000
+}
