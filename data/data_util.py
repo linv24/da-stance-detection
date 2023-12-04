@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader, Dataset
 import pandas as pd
 from transformers import AutoTokenizer
 
+from bertweet_util import normalizeTweet
+
 class SemEval2016Dataset(Dataset):
     '''
     Dataset containing semeval data. Currently returns tweet as token ids,
@@ -44,6 +46,7 @@ class SemEval2016Dataset(Dataset):
 
     def __getitem__(self, ix):
         tweet = self.df['tweet'].iloc[ix]
+        tweet = preprocess_tweet(tweet) # preprocess tweet (see below)
         target = self.df['target'].iloc[ix]
         stance = self.df['stance'].iloc[ix]
         encoding = self.tokenizer(tweet,
@@ -54,6 +57,19 @@ class SemEval2016Dataset(Dataset):
         input_ids = encoding['input_ids'].flatten()
         attention_mask = encoding['attention_mask'].flatten()
         return input_ids, attention_mask, target, stance
+
+def preprocess_tweet(tweet):
+    '''
+    Given tweet as string, perform tweet-specific preprocessing as described
+    here: https://github.com/VinAIResearch/BERTweet#-normalize-raw-input-tweets
+        * translate emojis into text
+        * convert @'s and URLs into special tokens
+
+    Example:
+        The feds are still planning to put a woman on the $10 dollar bill 💪 #abouttime https://www.google.com/ @Trump
+        => The feds are still planning to put a woman on the $ 10 dollar bill :flexed_biceps: #abouttime HTTPURL @USER
+    '''
+    return normalizeTweet(tweet)
 
 def get_semeval_dataset(tokenizer='vinai/bertweet-large', max_length=128, train=True):
     '''
@@ -94,15 +110,19 @@ def get_semeval_data_loader(batch_size=128, shuffle=True,
 
 
 if __name__ == '__main__':
-    dataset = get_semeval_dataset()
-    print(dataset[0])
+    # dataset = get_semeval_dataset()
+    # print(dataset[0])
 
-    loader = get_semeval_data_loader(batch_size=4)
-for ix, (input_ids, attention_mask, target, stance) in enumerate(loader):
-    # print(f'{input_ids=}')
-    # print(f'{attention_mask=}')
-    print(f'{target=}')
-    print(f'{stance=}')
-    print()
-    if ix == 2:
-        break
+    # loader = get_semeval_data_loader(batch_size=4)
+    # for ix, (input_ids, attention_mask, target, stance) in enumerate(loader):
+    #     # print(f'{input_ids=}')
+    #     # print(f'{attention_mask=}')
+    #     print(f'{target=}')
+    #     print(f'{stance=}')
+    #     print()
+    #     if ix == 2:
+    #         break
+
+    tweet = 'The feds are still planning to put a woman on the $10 dollar bill 💪 #abouttime #equalityforall #historychanged https://www.google.com/ @Trump'
+    print(tweet)
+    print(preprocess_tweet(tweet))
