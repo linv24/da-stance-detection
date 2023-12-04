@@ -5,6 +5,11 @@ import pandas as pd
 from transformers import AutoTokenizer
 
 class SemEval2016Dataset(Dataset):
+    '''
+    Dataset containing semeval data. Currently returns tweet as token ids,
+    tokenizer-generated attention mask, target as an id (see __init__), and
+    stance as an id (see __init__)
+    '''
     def __init__(self, csv_file, tokenizer, max_length):
         stance2id = {
             'AGAINST': 0,
@@ -69,6 +74,11 @@ def get_semeval_data_loader(batch_size=128, shuffle=True,
     '''
     Returns a PyTorch DataLoader for serving semeval data. See below/jupyter
     notebook for example usage.
+    Shapes: (B = batch_size, T = max_length)
+    input_ids: BxT
+    attention_mask: BxT
+    target: B
+    stance: B
 
     Args:
         train: bool for accessing either train or test data
@@ -88,5 +98,6 @@ for ix, (input_ids, attention_mask, target, stance) in enumerate(loader):
     # print(f'{attention_mask=}')
     print(f'{target=}')
     print(f'{stance=}')
-    if ix == 5:
+    print()
+    if ix == 2:
         break
