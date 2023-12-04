@@ -19,6 +19,8 @@ def get_bertscore(scorer, src, augs):
     '''
     Given a BERTScore instance, a source tweet, and its generated augmentations,
     return the BERTScore F1 score of each augmentation with the source.
+    BERTScore takes a while to initialize, so it's best to create and reuse a
+    single instance.
 
     BERTScore instance can be created as follows:
     >>> scorer = BERTScorer(lang='en', rescale_with_baseline=True)
@@ -28,6 +30,10 @@ def get_bertscore(scorer, src, augs):
     return F1
 
 def get_f_avg(P_favor, R_favor, P_against, R_against):
+    '''
+    Given precision and recall scores for "favor" and "against" stances, return
+    an F1 score averaged between the two stances.
+    '''
     F_favor = (2 * P_favor * R_favor) / (P_favor + R_favor)
     F_against = (2 * P_against * R_against) / (P_against + R_against)
     F_avg = (F_favor + F_against) / 2
