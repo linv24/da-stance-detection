@@ -8,7 +8,12 @@ class SemEval2016Dataset(Dataset):
     '''
     Dataset containing semeval data. Currently returns tweet as token ids,
     tokenizer-generated attention mask, target as an id (see __init__), and
-    stance as an id (see __init__)
+    stance as an id (see __init__).
+
+    To access raw data instead of tokenized data, probably easiest to just
+    access the Dataframe directly:
+        >>> dataset = SemEval2016Dataset(...)
+        >>> df = dataset.df
     '''
     def __init__(self, csv_file, tokenizer, max_length):
         stance2id = {
