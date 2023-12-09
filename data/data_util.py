@@ -3,8 +3,14 @@ from torch import nn
 from torch.utils.data import DataLoader, Dataset
 import pandas as pd
 from transformers import AutoTokenizer
+import os
 
-from bertweet_util import normalizeTweet
+from .bertweet_util import normalizeTweet
+
+# abspath = os.path.abspath(__file__)
+# dname = os.path.dirname(abspath)
+# os.chdir(dname)
+
 
 class SemEval2016Dataset(Dataset):
     '''
@@ -18,6 +24,7 @@ class SemEval2016Dataset(Dataset):
         >>> df = dataset.df
     '''
     def __init__(self, csv_file, tokenizer, max_length):
+        super().__init__()
         stance2id = {
             'AGAINST': 0,
             'FAVOR': 1,
